@@ -32,7 +32,7 @@ git clone https://github.com/trmxvibs/IPScanPro && cd IPScanPro
 ```
 **Make the Script Executable:**
 ```bash
-chmod +x ip.sh
+chmod +x Ipscanpro
 ```
 **Run the Script:**
 ```bash
