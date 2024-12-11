@@ -36,11 +36,11 @@ chmod +x ip.sh
 ```
 **Run the Script:**
 ```bash
-./ip.sh
+./Ipscanpro
 ```
 # *OR*
 ```
-bash ip.sh
+bash Ipscanpro
 ```
  # 🛠 Usage
 
