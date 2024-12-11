@@ -25,10 +25,10 @@ Prepare Your System:
 Ensure you have `figlet` and `Python3` with the `requests` module installed. You can install them with the following commands:
 
 ```bash
-pkg install -y python python2 python3 && pkg install figlet -y && pip3 install requests
+pkg install -y git python python2 python3 && pkg install figlet -y && pip3 install requests
 ```
 ```bash
-git clone https://github.com/trmxvibs/IP && cd IP
+git clone https://github.com/trmxvibs/IPScanPro && cd IPScanPro
 ```
 **Make the Script Executable:**
 ```bash
