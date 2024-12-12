@@ -3,7 +3,7 @@
 # Function to update & upgrade 
 apt-get update -y
 apt-get upgrade -y
-pkg install -y python python2 python3 curl wget openssl figlet
+pkg install -y git python python2 python3 curl wget openssl figlet
 pip install lolcat
 pip install figlet
 clear
@@ -120,7 +120,7 @@ update_tool() {
 # Function to remove the tool
 remove_tool() {
     echo -e "${RED}Removing tool...${RESET}"
-    rm -f $HOME/bin/ip
+    rm -f $HOME/bin/IPScanPro
     echo -e "${GREEN}Tool removed successfully!${RESET}"
 }
 
