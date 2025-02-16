@@ -1,65 +1,68 @@
 #!/bin/bash
 set -e
 
-# tool made by Lokesh Kumar
-# Function to update & upgrade 
-sudo apt-get update -y
-sudo apt-get upgrade -y
+# Tool made by Lokesh Kumar
+
+# Define colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+MAGENTA='\033[0;35m'
+CYAN='\033[0;36m'
+WHITE='\033[0;37m'
+RESET='\033[0m'
+
+# Detect the OS
+if [[ $(uname -o) == "Android" ]]; then
+    OS="Termux"
+    PKG_MANAGER="pkg"
+    UPDATE_CMD="pkg update -y && pkg upgrade -y"
+    INSTALL_CMD="pkg install -y"
+elif [[ -f /etc/debian_version ]]; then
+    OS="Kali Linux"
+    PKG_MANAGER="apt-get"
+    UPDATE_CMD="apt-get update -y && apt-get upgrade -y"
+    INSTALL_CMD="apt-get install -y"
+else
+    echo -e "${RED}Unsupported operating system.${RESET}"
+    exit 1
+fi
+
+# Update and upgrade system
+echo -e "${GREEN}Updating and upgrading $OS...${RESET}"
+eval "$UPDATE_CMD"
 
 # Install required packages
-if ! pkg install -y git python python2 python3 curl wget openssl figlet; then
+echo -e "${GREEN}Installing required packages...${RESET}"
+if ! $INSTALL_CMD git python python2 python3 curl wget openssl figlet; then
     echo -e "${RED}Failed to install required packages.${RESET}"
     exit 1
 fi
 
-pip install lolcat
-pip install figlet
+# Install Python dependencies
+echo -e "${GREEN}Installing Python dependencies...${RESET}"
+if ! pip install lolcat requests; then
+    echo -e "${RED}Failed to install Python dependencies.${RESET}"
+    exit 1
+fi
+
 clear
-sleep 3
+sleep 2
+echo -e "${GREEN}Setup completed successfully!${RESET}"
 
-# Show banner permanently
-display_banner() {
-    colors=(31 32 33 34 35 36)
-    color_index=$(( RANDOM % 6 ))
-    echo " Ip-Scan-Pro " | figlet | lolcat
-}
-
-# ANSI color codes for colorizing the output
-RED="\033[91m"
-GREEN="\033[92m"
-YELLOW="\033[93m"
-BLUE="\033[94m"
-MAGENTA="\033[95m"
-CYAN="\033[96m"
-WHITE="\033[97m"
-RESET="\033[0m"
-
-# Directory in home to save scan results
+# Directory to save scan results
 SAVE_DIR="$HOME/IP_Scanner_Results"
 
-# Function to install figlet if it's not installed
-install_figlet() {
-    if ! command -v figlet &> /dev/null; then
-        echo -e "${YELLOW}Installing figlet...${RESET}"
-        pkg install figlet -y || sudo apt-get install figlet -y
-    fi
-}
-
-# Function to install Python requests if it's not installed
-install_requests() {
-    if ! python3 -c "import requests" &> /dev/null; then
-        echo -e "${YELLOW}Installing Python requests module...${RESET}"
-        pip3 install requests || sudo apt-get install python3-requests -y
-    fi
-}
+# Ensure save directory exists
+mkdir -p "$SAVE_DIR"
 
 # Function to fetch IP details using Python
 fetch_ip_details() {
     local ip_address=$1
     python3 - <<END
 import requests
-import json
-import os  # Import the os module
+import os
 
 access_token = "914d41abe9bb39"
 ip_address = "$ip_address"
@@ -71,64 +74,34 @@ try:
     details = response.json()
 except requests.RequestException as e:
     print("${RED}Failed to fetch details for ${ip_address}. Error: {e}${RESET}")
-    details = None
+    exit(1)
 
-if details:
-    print("${GREEN}--- IP Address Details ---${RESET}")
-    print(f"${CYAN}IP Address: {details.get('ip', 'N/A')}${RESET}")
-    print(f"${CYAN}Hostname: {details.get('hostname', 'N/A')}${RESET}")
-    print(f"${CYAN}City: {details.get('city', 'N/A')}${RESET}")
-    print(f"${CYAN}Region: {details.get('region', 'N/A')}${RESET}")
-    print(f"${CYAN}Country: {details.get('country', 'N/A')}${RESET}")
-    print(f"${CYAN}Location: {details.get('loc', 'N/A')}${RESET}")
-    print(f"${CYAN}Organization: {details.get('org', 'N/A')}${RESET}")
-    print(f"${CYAN}Postal Code: {details.get('postal', 'N/A')}${RESET}")
-    print(f"${CYAN}Timezone: {details.get('timezone', 'N/A')}${RESET}")
-    print(f"${CYAN}Anycast: {details.get('anycast', 'N/A')}${RESET}")
-    print(f"${CYAN}Carrier: {details.get('carrier', 'N/A')}${RESET}")
-    print(f"${CYAN}Internet ID: {details.get('asn', {}).get('asn', 'N/A')}${RESET}")
-    print("${GREEN}----------------------------${RESET}")
+# Save details to file
+save_dir = "$SAVE_DIR"
+filename = f"{save_dir}/{details.get('ip', 'N/A')}_Report.txt"
+with open(filename, 'w') as file:
+    for key, value in details.items():
+        file.write(f"{key.capitalize()}: {value}\n")
 
-    # Save details to file
-    save_dir = "$SAVE_DIR"
-    if not os.path.exists(save_dir):
-        os.makedirs(save_dir)
-
-    filename = f"{save_dir}/{details.get('ip', 'N/A')}_Report.txt"
-    with open(filename, 'w') as file:
-        file.write("--- IP Address Details ---\n")
-        file.write(f"IP Address: {details.get('ip', 'N/A')}\n")
-        file.write(f"Hostname: {details.get('hostname', 'N/A')}\n")
-        file.write(f"City: {details.get('city', 'N/A')}\n")
-        file.write(f"Region: {details.get('region', 'N/A')}\n")
-        file.write(f"Country: {details.get('country', 'N/A')}\n")
-        file.write(f"Location: {details.get('loc', 'N/A')}\n")
-        file.write(f"Organization: {details.get('org', 'N/A')}\n")
-        file.write(f"Postal Code: {details.get('postal', 'N/A')}\n")
-        file.write(f"Timezone: {details.get('timezone', 'N/A')}\n")
-        file.write(f"Anycast: {details.get('anycast', 'N/A')}\n")
-        file.write(f"Carrier: {details.get('carrier', 'N/A')}\n")
-        file.write(f"Internet ID: {details.get('asn', {}).get('asn', 'N/A')}\n")
-        file.write("----------------------------\n")
-    print("${GREEN}Details saved to ${filename}${RESET}")
+print("${GREEN}Details saved to ${filename}${RESET}")
 END
 }
 
-# Function to simulate updating the tool with a loading bar
+# Function to update the tool
 update_tool() {
     echo -e "${BLUE}Updating tool...${RESET}"
     for i in {0..100}; do
         sleep 0.1
         echo -ne "${YELLOW}Updating ====> $i%${RESET}\r"
     done
-    echo -e "\n${GREEN}Tool updated successfully!${RESET}"
+    echo -e "\n${GREEN}Tool is already up-to-date!${RESET}"
     sleep 1
 }
 
 # Function to remove the tool
 remove_tool() {
     echo -e "${RED}Removing tool...${RESET}"
-    rm -f $HOME/bin/IPScanPro
+    rm -rf "$HOME/IPScanPro"
     echo -e "${GREEN}Tool removed successfully!${RESET}"
 }
 
@@ -151,11 +124,11 @@ main_menu() {
                     echo -e "${RED}Invalid IPv4 address format.${RESET}"
                     continue
                 fi
-                fetch_ip_details $ip_address
+                fetch_ip_details "$ip_address"
                 ;;
             2)
                 read -p "$(echo -e ${YELLOW}Enter the IPv6 address: ${RESET})" ip_address
-                fetch_ip_details $ip_address
+                fetch_ip_details "$ip_address"
                 ;;
             3)
                 update_tool
@@ -175,13 +148,5 @@ main_menu() {
     done
 }
 
-# Main function
-main() {
-    display_banner
-    install_figlet
-    install_requests
-    main_menu
-}
-
 # Execute the main function
-main
+main_menu
