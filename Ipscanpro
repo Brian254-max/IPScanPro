@@ -1,13 +1,22 @@
 #!/bin/bash
-#tool made by Lokesh Kumar
+set -e
+
+# tool made by Lokesh Kumar
 # Function to update & upgrade 
-apt-get update -y
-apt-get upgrade -y
-pkg install -y git python python2 python3 curl wget openssl figlet
+sudo apt-get update -y
+sudo apt-get upgrade -y
+
+# Install required packages
+if ! pkg install -y git python python2 python3 curl wget openssl figlet; then
+    echo -e "${RED}Failed to install required packages.${RESET}"
+    exit 1
+fi
+
 pip install lolcat
 pip install figlet
 clear
 sleep 3
+
 # Show banner permanently
 display_banner() {
     colors=(31 32 33 34 35 36)
@@ -43,7 +52,6 @@ install_requests() {
         pip3 install requests || sudo apt-get install python3-requests -y
     fi
 }
-
 
 # Function to fetch IP details using Python
 fetch_ip_details() {
@@ -110,7 +118,7 @@ END
 update_tool() {
     echo -e "${BLUE}Updating tool...${RESET}"
     for i in {0..100}; do
-        sleep 0.45
+        sleep 0.1
         echo -ne "${YELLOW}Updating ====> $i%${RESET}\r"
     done
     echo -e "\n${GREEN}Tool updated successfully!${RESET}"
@@ -139,6 +147,10 @@ main_menu() {
         case $choice in
             1)
                 read -p "$(echo -e ${YELLOW}Enter the IPv4 address: ${RESET})" ip_address
+                if [[ ! $ip_address =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+                    echo -e "${RED}Invalid IPv4 address format.${RESET}"
+                    continue
+                fi
                 fetch_ip_details $ip_address
                 ;;
             2)
@@ -149,7 +161,6 @@ main_menu() {
                 update_tool
                 ;;
             4)
-rm -rf IP
                 remove_tool
                 exit 0
                 ;;
@@ -166,12 +177,11 @@ rm -rf IP
 
 # Main function
 main() {
-display_banner
+    display_banner
     install_figlet
     install_requests
     main_menu
 }
 
 # Execute the main function
-display_banner
 main
