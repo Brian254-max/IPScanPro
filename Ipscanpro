@@ -6,12 +6,14 @@ set -e
 # Define colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
-YELLOW='\033[0;33m'
-BLUE='\033[0;34m'
-MAGENTA='\033[0;35m'
-CYAN='\033[0;36m'
-WHITE='\033[0;37m'
+YELLOW='\033[93m'
+CYAN='\033[96m'
+MAGENTA='\033[95m'
+BLUE='\033[94m'
 RESET='\033[0m'
+
+# Directory to save scan results
+SAVE_DIR="$HOME/IP_Scanner_Results"
 
 # Detect the OS
 if [[ $(uname -o) == "Android" ]]; then
@@ -29,40 +31,33 @@ else
     exit 1
 fi
 
-# Update and upgrade system
+# Update and install required packages
 echo -e "${GREEN}Updating and upgrading $OS...${RESET}"
 eval "$UPDATE_CMD"
 
-# Install required packages
 echo -e "${GREEN}Installing required packages...${RESET}"
-if ! $INSTALL_CMD git python python2 python3 curl wget openssl figlet; then
-    echo -e "${RED}Failed to install required packages.${RESET}"
-    exit 1
-fi
+$INSTALL_CMD git python python2 python3 curl wget openssl figlet lolcat
 
-# Install Python dependencies
-echo -e "${GREEN}Installing Python dependencies...${RESET}"
-if ! pip install lolcat requests; then
-    echo -e "${RED}Failed to install Python dependencies.${RESET}"
-    exit 1
-fi
+# Function to display the banner
+display_banner() {
+    clear
+    echo -e "${CYAN}"
+    figlet -f slant "IP Scanner Pro" | lolcat
+    echo -e "${GREEN}By Lokesh Kumar${RESET}"
+    echo -e "${MAGENTA}---------------------------------${RESET}"
+    echo -e "${YELLOW}Advanced IP Scanning Tool${RESET}"
+    echo -e "${MAGENTA}---------------------------------${RESET}"
+}
 
-clear
-sleep 2
-echo -e "${GREEN}Setup completed successfully!${RESET}"
-
-# Directory to save scan results
-SAVE_DIR="$HOME/IP_Scanner_Results"
-
-# Ensure save directory exists
-mkdir -p "$SAVE_DIR"
-
-# Function to fetch IP details using Python
+# Function to fetch and display IP details
 fetch_ip_details() {
     local ip_address=$1
-    python3 - <<END
+    local result
+
+    # Use Python to fetch IP details
+    result=$(python3 - <<END
 import requests
-import os
+import json
 
 access_token = "914d41abe9bb39"
 ip_address = "$ip_address"
@@ -73,18 +68,39 @@ try:
     response.raise_for_status()
     details = response.json()
 except requests.RequestException as e:
-    print("${RED}Failed to fetch details for ${ip_address}. Error: {e}${RESET}")
+    print("ERROR")
     exit(1)
 
-# Save details to file
-save_dir = "$SAVE_DIR"
-filename = f"{save_dir}/{details.get('ip', 'N/A')}_Report.txt"
-with open(filename, 'w') as file:
-    for key, value in details.items():
-        file.write(f"{key.capitalize()}: {value}\n")
-
-print("${GREEN}Details saved to ${filename}${RESET}")
+print(json.dumps(details))
 END
+)
+
+    # Check if the request was successful
+    if [[ "$result" == "ERROR" ]]; then
+        echo -e "${RED}Failed to fetch details for $ip_address.${RESET}"
+        return
+    fi
+
+    # Convert JSON response to readable format
+    echo -e "${GREEN}--- IP Address Details ---${RESET}"
+    echo "$result" | jq -r "
+        \"${CYAN}IP Address: \(.ip // \"N/A\")${RESET}\",
+        \"${CYAN}Hostname: \(.hostname // \"N/A\")${RESET}\",
+        \"${CYAN}City: \(.city // \"N/A\")${RESET}\",
+        \"${CYAN}Region: \(.region // \"N/A\")${RESET}\",
+        \"${CYAN}Country: \(.country // \"N/A\")${RESET}\",
+        \"${CYAN}Location: \(.loc // \"N/A\")${RESET}\",
+        \"${CYAN}Organization: \(.org // \"N/A\")${RESET}\",
+        \"${CYAN}Postal Code: \(.postal // \"N/A\")${RESET}\",
+        \"${CYAN}Timezone: \(.timezone // \"N/A\")${RESET}\"
+    "
+    echo -e "${GREEN}----------------------------${RESET}"
+
+    # Save details to file
+    mkdir -p "$SAVE_DIR"
+    filename="$SAVE_DIR/${ip_address}_Report.txt"
+    echo "$result" | jq . > "$filename"
+    echo -e "${GREEN}Details saved to: ${filename}${RESET}"
 }
 
 # Function to update the tool
@@ -101,13 +117,15 @@ update_tool() {
 # Function to remove the tool
 remove_tool() {
     echo -e "${RED}Removing tool...${RESET}"
-    rm -rf "$HOME/IPScanPro"
+    cd .. 
+    rm -rf IPScanPro
     echo -e "${GREEN}Tool removed successfully!${RESET}"
 }
 
 # Function to display the main menu
 main_menu() {
     while true; do
+        display_banner
         echo -e "${MAGENTA}\nMain Menu:${RESET}"
         echo -e "${CYAN}1. Scan IPv4${RESET}"
         echo -e "${CYAN}2. Scan IPv6${RESET}"
@@ -145,8 +163,10 @@ main_menu() {
                 echo -e "${RED}Invalid choice, please try again.${RESET}"
                 ;;
         esac
+        echo -e "\n${YELLOW}Press Enter to continue...${RESET}"
+        read
     done
 }
 
-# Execute the main function
+# Run the script
 main_menu
