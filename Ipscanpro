@@ -36,7 +36,7 @@ echo -e "${GREEN}Updating and upgrading $OS...${RESET}"
 eval "$UPDATE_CMD"
 
 echo -e "${GREEN}Installing required packages...${RESET}"
-$INSTALL_CMD git python python2 python3 curl wget openssl figlet lolcat
+$INSTALL_CMD git python python2 python3 curl wget openssl figlet 
 
 # Function to display the banner
 display_banner() {
