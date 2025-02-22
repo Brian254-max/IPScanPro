@@ -84,15 +84,15 @@ END
     # Convert JSON response to readable format
     echo -e "${GREEN}--- IP Address Details ---${RESET}"
     echo "$result" | jq -r "
-        \"${CYAN}IP Address: \(.ip // \"N/A\")${RESET}\",
-        \"${CYAN}Hostname: \(.hostname // \"N/A\")${RESET}\",
-        \"${CYAN}City: \(.city // \"N/A\")${RESET}\",
-        \"${CYAN}Region: \(.region // \"N/A\")${RESET}\",
-        \"${CYAN}Country: \(.country // \"N/A\")${RESET}\",
-        \"${CYAN}Location: \(.loc // \"N/A\")${RESET}\",
-        \"${CYAN}Organization: \(.org // \"N/A\")${RESET}\",
-        \"${CYAN}Postal Code: \(.postal // \"N/A\")${RESET}\",
-        \"${CYAN}Timezone: \(.timezone // \"N/A\")${RESET}\"
+        \"${CYAN}IP Address: \\(.ip // \"N/A\")${RESET}\",
+        \"${CYAN}Hostname: \\(.hostname // \"N/A\")${RESET}\",
+        \"${CYAN}City: \\(.city // \"N/A\")${RESET}\",
+        \"${CYAN}Region: \\(.region // \"N/A\")${RESET}\",
+        \"${CYAN}Country: \\(.country // \"N/A\")${RESET}\",
+        \"${CYAN}Location: \\(.loc // \"N/A\")${RESET}\",
+        \"${CYAN}Organization: \\(.org // \"N/A\")${RESET}\",
+        \"${CYAN}Postal Code: \\(.postal // \"N/A\")${RESET}\",
+        \"${CYAN}Timezone: \\(.timezone // \"N/A\")${RESET}\"
     "
     echo -e "${GREEN}----------------------------${RESET}"
 
