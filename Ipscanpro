@@ -81,20 +81,20 @@ END
         return
     fi
 
-    # Convert JSON response to readable format
-    echo -e "${GREEN}--- IP Address Details ---${RESET}"
-    echo "$result" | jq -r "
-        \"${CYAN}IP Address: \\(.ip // \"N/A\")${RESET}\",
-        \"${CYAN}Hostname: \\(.hostname // \"N/A\")${RESET}\",
-        \"${CYAN}City: \\(.city // \"N/A\")${RESET}\",
-        \"${CYAN}Region: \\(.region // \"N/A\")${RESET}\",
-        \"${CYAN}Country: \\(.country // \"N/A\")${RESET}\",
-        \"${CYAN}Location: \\(.loc // \"N/A\")${RESET}\",
-        \"${CYAN}Organization: \\(.org // \"N/A\")${RESET}\",
-        \"${CYAN}Postal Code: \\(.postal // \"N/A\")${RESET}\",
-        \"${CYAN}Timezone: \\(.timezone // \"N/A\")${RESET}\"
-    "
-    echo -e "${GREEN}----------------------------${RESET}"
+  # Convert JSON response to readable format
+echo -e "${GREEN}--- IP Address Details ---${RESET}"
+echo "$result" | jq -r '
+    "\u001b[96mIP Address: \(.ip // "N/A")\u001b[0m",
+    "\u001b[96mHostname: \(.hostname // "N/A")\u001b[0m",
+    "\u001b[96mCity: \(.city // "N/A")\u001b[0m",
+    "\u001b[96mRegion: \(.region // "N/A")\u001b[0m",
+    "\u001b[96mCountry: \(.country // "N/A")\u001b[0m",
+    "\u001b[96mLocation: \(.loc // "N/A")\u001b[0m",
+    "\u001b[96mOrganization: \(.org // "N/A")\u001b[0m",
+    "\u001b[96mPostal Code: \(.postal // "N/A")\u001b[0m",
+    "\u001b[96mTimezone: \(.timezone // "N/A")\u001b[0m"
+'
+echo -e "${GREEN}----------------------------${RESET}"
 
     # Save details to file
     mkdir -p "$SAVE_DIR"
