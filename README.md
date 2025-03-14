@@ -1,6 +1,6 @@
 # 🚀 IP Scanner Tool
 ***version 1.0.1***
-![image](https://github.com/user-attachments/assets/9091b40b-2abb-4f53-ace3-a915996f481f)
+![image](https://github.com/user-attachments/assets/abfdc378-9b38-4bd4-9a3d-67580176ca91)
 
 Welcome to the IP Scanner Tool! This handy Bash script lets you uncover detailed information about any IPv4 or IPv6 address with ease. Whether you're a network administrator, a security enthusiast, or just curious about IPs, this tool has got you covered!
 
@@ -12,8 +12,6 @@ Welcome to the IP Scanner Tool! This handy Bash script lets you uncover detailed
 
 **💾 Save Results:** Automatically save your scan results to neatly organized files in your home directory.
 
-# My other videos on Youtube
-[![WhatsApp Hacking](https://img.youtube.com/vi/JMCTjlqS5Oc/maxresdefault.jpg)](https://youtu.be/JMCTjlqS5Oc)
 
 
 
@@ -42,6 +40,11 @@ chmod +x install.sh
 ```
 bash install.sh
 ```
+![image](https://github.com/user-attachments/assets/569e045b-d0a2-49f6-bd10-fb95039f6f37)
+
+
+
+
  # 🛠 Usage
 
 **🔍 Scan IPv4/IPv6:**  Enter an IP address to fetch its details.
@@ -55,7 +58,7 @@ bash install.sh
 # 🎨 Screenshot
 Here’s a sneak peek of the IP Scanner Tool in action:
 
-![image](https://github.com/user-attachments/assets/c9f45790-9ed9-4e23-9765-3bafe4612454)
+![image](https://github.com/user-attachments/assets/0f8255b1-67b6-4dae-af4e-a4d0ec628f7c)
 
 
 
@@ -88,3 +91,7 @@ This script is provided as-is. No warranties or guarantees are provided. Use at 
 # 👨‍💻 Author
 **Lokesh Kumar**  
 [GitHub Profile](https://github.com/trmxvibs)
+
+
+# My other videos on Youtube
+[![WhatsApp Hacking](https://img.youtube.com/vi/jfPqGalt5CQ/maxresdefault.jpg)](https://youtu.be/jfPqGalt5CQ?si=IBOvM3iOB8-03ccd)
