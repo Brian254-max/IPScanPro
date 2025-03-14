@@ -32,15 +32,15 @@ git clone https://github.com/trmxvibs/IPScanPro && cd IPScanPro
 ```
 **Make the Script Executable:**
 ```bash
-chmod +x Ipscanpro
+chmod +x install.sh
 ```
 **Run the Script:**
 ```bash
-./Ipscanpro
+./install.sh
 ```
 # *OR*
 ```
-bash Ipscanpro
+bash install.sh
 ```
  # 🛠 Usage
 
