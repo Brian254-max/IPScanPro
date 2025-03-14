@@ -36,7 +36,7 @@ echo -e "${GREEN}Updating and upgrading $OS...${RESET}"
 eval "$UPDATE_CMD"
 
 echo -e "${GREEN}Installing required packages...${RESET}"
-$INSTALL_CMD git python python2 python3 curl wget openssl figlet 
+$INSTALL_CMD git python python2 python3 curl wget openssl figlet jq
 
 # Function to display the banner
 display_banner() {
@@ -126,6 +126,13 @@ remove_tool() {
 main_menu() {
     while true; do
         display_banner
+        
+        # Fetch and display user IP information
+        ipv4=$(curl -s -4 ifconfig.me)
+        ipv6=$(curl -s ifconfig.me)
+        echo -e "${YELLOW}Your IPv4: ${CYAN}$ipv4${RESET}"
+        echo -e "${YELLOW}Your IPv6: ${CYAN}$ipv6${RESET}"
+        
         echo -e "${MAGENTA}\nMain Menu:${RESET}"
         echo -e "${CYAN}1. Scan IPv4${RESET}"
         echo -e "${CYAN}2. Scan IPv6${RESET}"
