@@ -12,18 +12,18 @@ YELLOW='\033[93m'
 RESET='\033[0m'
 
 # Detect the OS
-if [[ $(uname -o) == "Android" ]]; then
-    OS="Termux"
+if [[ "$(uname)" == CYGWIN* ]] || [[ "$(uname)" == MINGW* ]] || [[ "$(uname)" == MSYS* ]]; then
+    OS="WINDOWS"
     PKG_MANAGER="pkg"
-    UPDATE_CMD="pkg update -y && pkg upgrade -y"
-    INSTALL_CMD="pkg install -y"
-    BIN_DIR="$PREFIX/bin"
+    UPDATE_CMD="winget upgrade --all"
+    INSTALL_CMD="winget install -y"
+    BIN_DIR="$PREFIX/bin"C:\Users\user\OneDrive
 elif [[ -f /etc/debian_version ]]; then
-    OS="Kali Linux"
+    OS="WINDOWS"
     PKG_MANAGER="apt-get"
     UPDATE_CMD="apt-get update -y && apt-get upgrade -y"
     INSTALL_CMD="apt-get install -y"
-    BIN_DIR="/usr/local/bin"
+    BIN_DIR="C:\Program Files (x86)"  #user application store
 else
     echo -e "${RED}Unsupported operating system.${RESET}"
     exit 1
